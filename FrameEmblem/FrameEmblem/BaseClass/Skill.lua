@@ -1,4 +1,3 @@
-
 --[[Skill类：
     -- 成员变量（属性） --
     + string name   技能的名称
@@ -10,31 +9,46 @@
     + Skill initialize(Skill other)
     + Skill initialize(string name, function skillEffect)
     + Skill initialize(string name, function skillEffect, int mpCost, int cd)
-]]--
---[[定义类Skill]]
+]] --
+
+--[[
+    定义类Skill
+]]
 Skill = class('Skill')
---[[Skill类的构造函数]]--
-function Skill:initialize(name,skillEffect)
+
+--[[
+    Skill类的构造函数
+]]
+function Skill:initialize(name, skillEffect)
     self.name = name
-    --skillEffect函数--
+    self.skillEffect = skillEffect
+    self.subSkill = {}
 end
 
---[[Skill类的构造函数]]--
+--[[
+    Skill类的构造函数
+]]
 function Skill:initialize(other)
     self.name = other.name
     self.cd = other.cd
     self.mpCost = other.mpCost
-    --skillEffect函数--
+    self.skillEffect = other.skillEffect
+    self.subSkill = {}
+    -- 深拷贝子技能表
+    for k, v in ipairs(other.subSkill) do
+        self.subSkill[k] = v
+    end
 end
 
---[[Skill类的构造函数]]--
-function Skill:initialize(name,skillEffect,mpCost,cd)
+--[[
+    Skill类的构造函数
+]]
+function Skill:initialize(name, skillEffect, mpCost, cd)
     self.name = name
     self.mpCost = mpCost
     self.cd = cd
-    --skillEffect函数--
+    self.skillEffect = skillEffect
+    self.subSkill = {}
 end
---[[Skill类的skillEffect函数成员]]--
-function Skill:skillEffect()
-    --待用户填充
-end
+
+return Skill
