@@ -14,10 +14,10 @@ function GuiControl:Init()
 end
 
 function GuiControl:InitGui()
-    gui = localPlayer.Local.ControlGui
+    gui = world.Local.ControlGUI
     this.joystick = gui.Joystick
-    this.touchScreen = gui.TouchFig
-    this.jumpBtn = gui.JumpBtn
+    this.touchScreen = gui.TouchFigure
+    this.jumpBtn = gui.JumpButton
 end
 
 function GuiControl:InitListener()

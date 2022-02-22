@@ -17,7 +17,7 @@ function PlayerCam:DataInit()
     this.curCamera = nil
 
     -- 玩家跟随相机
-    this.playerGameCam = localPlayer.Local.Independent.GameCam
+    this.playerGameCam = world.Local.MainCamera
 end
 
 function PlayerCam:InitCamera()

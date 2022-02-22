@@ -10,10 +10,11 @@ Manifest.Events = {
 }
 
 Manifest.Modules = {
-    'Fsm/Base/ControllerBase',
-    'Fsm/Base/TransitonBase',
-    'Fsm/Base/StateBase',
-    'Fsm/PlayerAnimMgr',
+    --'Fsm/Base/ControllerBase',
+    --'Fsm/Base/TransitonBase',
+    --'Fsm/Base/StateBase',
+    --'Fsm/PlayerAnimMgr',
+    --[[
     'Fsm/PlayerActFsm/PlayerActController',
     'Fsm/PlayerActFsm/PlayerActState',
     'Fsm/PlayerActFsm/State/ActBeginState',
@@ -76,13 +77,12 @@ Manifest.Modules = {
     'Fsm/PlayerActFsm/State/WateringPlantBeginState',
     'Fsm/PlayerActFsm/State/WateringPlantEndState',
     'Fsm/PlayerActFsm/State/WateringPlantState',
-    'Fsm/FsmMgr',
-    'Fsm/PlayerActAnimeGui',
-    'Mgr/PlayerGuiDefault',
-    'Mgr/EmoActionMgr',
-    'Mgr/GuiControl',
-    'Mgr/PlayerCam',
-    'Mgr/PlayerCtrl'
+    ]]
+    --'Fsm/FsmMgr',
+    --'Mgr/PlayerGuiDefault',
+    --'Mgr/GuiControl',
+    --'Mgr/PlayerCam',
+    --'Mgr/PlayerCtrl'
 }
 
 return Manifest
