@@ -4,6 +4,10 @@ local _REGISTER = {
     "CONST_FUNCTIONS",
 }
 
+local _Null = function()
+    Debug.LogWarning("CONST_FUNCTIONS检索失败，未检索到对应的函数，请检查传参是否正确")
+end
+
 
 local _global_functions_cache = {}
 
@@ -25,8 +29,12 @@ end
 local mt = {
     __index = function(_,k)
         local _result = _global_functions_cache[k]
-        if not _result then Debug.LogWarning("CONST_FUNCTIONS 警告：未找到对应函数，请检查传参 "..k) end
-        return _result
+        if _result then
+            return _result
+        else
+            Debug.LogWarning("CONST_FUNCTIONS 警告：未找到对应函数，请检查传参 "..k) 
+            return _Null
+        end
     end,
 
     __newindex = function(_,k)
@@ -35,8 +43,12 @@ local mt = {
 
     __call = function(k)
         local _result = _global_functions_cache[k]
-        if not _result then Debug.LogWarning("CONST_FUNCTIONS 警告：未找到对应函数，请检查传参 "..k) end
-        return _result
+        if _result then
+            return _result
+        else
+            Debug.LogWarning("CONST_FUNCTIONS 警告：未找到对应函数，请检查传参 "..k) 
+            return _Null
+        end
     end
 }
 

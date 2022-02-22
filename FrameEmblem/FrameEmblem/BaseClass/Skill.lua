@@ -51,4 +51,21 @@ function Skill:initialize(name, skillEffect, mpCost, cd)
     self.subSkill = {}
 end
 
+--! TODO
+--[[
+    增加一个Spell函数，用于发动技能
+    函数调用后，首先调用自身的skillEffect函数，然后遍历subSkill依次发动
+    需要注意死循环的情况
+    （例如，技能本体释放结束后调用了子技能A，子技能A调用了B，B调用了C，C调用了A，这种情况会不可避免地导致死循环
+    因此，必须规定最大的技能调用层数，超出最大调用层数的技能不会再调用）
+]]
+
+--! TODO
+--[[
+    增加相关属性，用于显示和确定技能的攻击范围
+    （需要考虑设计新的数据结构或新的表结构）
+]]
+
+
+
 return Skill
