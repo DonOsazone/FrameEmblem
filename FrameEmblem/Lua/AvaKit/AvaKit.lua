@@ -21,6 +21,10 @@ function InitLuaExt()
     require(PATH_LUA_EXT .. 'MathExt')
     _G.Queue = require(PATH_LUA_EXT .. 'Queue')
     _G.Stack = require(PATH_LUA_EXT .. 'Stack')
+
+    -- FrameEmblem
+    _G.Func = require("FrameEmblem/Utils/Func")
+
 end
 
 --- 初始化AvaKit
