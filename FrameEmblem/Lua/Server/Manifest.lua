@@ -7,6 +7,8 @@ Manifest.ROOT_PATH = 'Lua/Server/'
 
 Manifest.Events = {}
 
-Manifest.Modules = {}
+Manifest.Modules = {
+    '/FrameEmblem/Runtime/Server/Server'
+}
 
 return Manifest

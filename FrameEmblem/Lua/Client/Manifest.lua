@@ -10,6 +10,7 @@ Manifest.Events = {
 }
 
 Manifest.Modules = {
+    '/FrameEmblem/Runtime/Client/Client'
     --'Fsm/Base/ControllerBase',
     --'Fsm/Base/TransitonBase',
     --'Fsm/Base/StateBase',

@@ -28,7 +28,7 @@ function ModuleUtil.LoadManifest(_root, _manifest, _res, _list)
                 tmpRoot[fn] = tmpRoot[fn] or {}
                 tmpRoot = tmpRoot[fn]
             else
-                tmpRoot[fn] = require(_res .. path)
+                tmpRoot[fn] = require((string.startswith(path, "/")) and string.sub(path, 2, -1) or _res .. path)
                 if _list then
                     table.insert(_list, tmpRoot[fn])
                 end
