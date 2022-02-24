@@ -24,6 +24,7 @@ function InitLuaExt()
 
     -- FrameEmblem
     _G.Func = require("FrameEmblem/Utils/Func")
+    _G.TilePos = require("FrameEmblem/Utils/TilePos")
 
 end
 

@@ -1,4 +1,4 @@
--- @ author : Gyss
+--- @author Gyss
 
 local _REGISTER = {
     'CONST_FUNCTIONS'
