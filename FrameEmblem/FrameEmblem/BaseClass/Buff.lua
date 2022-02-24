@@ -16,23 +16,22 @@
     Buff initialize(string name,function buffEffect,int layer,int duration)
     void SetBuffFrom(Pawn from)                设置buff的来源，将Buff的from属性设置为传入的from     该函数仅能执行一次
 ]]
-
 --@class Buff
 
 local Buff = {}
 
-local _private = setmetatable({},{__mode = "k"})
+local _private = setmetatable({}, {__mode = 'k'})
 
 --- @function initialize
 ---
-function Buff:initialize(OtherOrName,buffEffect,layer,duration)
-    if OtherOrName:isInstanceOf(Buff) then
+function Buff:initialize(OtherOrName, buffEffect, layer, duration)
+    if self.isInstanceOf(OtherOrName, Buff) then
         self.name = OtherOrName.name
         self.layer = OtherOrName.layer
         self.duration = OtherOrName.duration
         self.target = OtherOrName.target
         self.buffEffect = OtherOrName.buffEffect
-    elseif type(OtherOrName) == "string" then
+    elseif type(OtherOrName) == 'string' then
         self.name = OtherOrName.name
         self.buffEffect = buffEffect or function() end
         self.layer = layer or 1
@@ -43,17 +42,14 @@ end
 function Buff:SetBuffFrom(_from)
     if self:isInstanceOf(Buff) then
         _private[self] = {from = _from}
-        self.SetBuffFrom = function() 
-            Debug.LogWarning("Buff.SetBuffFrom 警告：不能对Buff的来源进行二次修改") 
+        self.SetBuffFrom = function()
+            Debug.LogWarning('Buff.SetBuffFrom 警告：不能对Buff的来源进行二次修改')
         end
     else
-        Debug.LogWarning("Buff.SetBuffFrom 警告：该函数仅能作为实例的成员函数调用")
+        Debug.LogWarning('Buff.SetBuffFrom 警告：该函数仅能作为实例的成员函数调用')
     end
 end
 
 function Buff:Spell(...)
-    (type(self.buffEffect) == "function" and self.buffEffect or Func(self.buffEffect))(...)
+    (type(self.buffEffect) == 'function' and self.buffEffect or Func(self.buffEffect))(...)
 end
-
-
-
