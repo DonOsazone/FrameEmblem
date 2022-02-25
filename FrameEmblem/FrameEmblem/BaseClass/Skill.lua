@@ -8,7 +8,7 @@
     + hashtable  prop   技能的特殊属性（如范围，方向，持续回合等等，用户可自定义）
     + function skillEffect  技能的效果
     + table<int,Skill> subSkill     子技能表
-    + int subSkill_num 子技能中技能的数量
+    + table<int,table> skillTable   技能在调用它的子技能时记录用的临时表（一个静态成员）
     -- 成员函数（方法） --
     + Skill initialize(Skill other)
     + Skill initialize(string name, function skillEffect)
@@ -20,13 +20,8 @@
 ]]
 Skill = class('Skill')
 
-Skill.static.LAYER = 8 --技能调用的嵌套层数，实际为该值的-1层！！（eg：LAYER = 8，则嵌套层数为7）
-
---[[一些局部变量，用于子技能表的使用]]--
-local skillTable = {}
-local subSkillNumTable = {}
-local fSkill = 0
-local tSkill = 1
+Skill.static.LAYER = 7 --技能调用的嵌套层数
+Skill.static.skillTable = {} --技能在调用它的子技能时记录用的临时表（一个静态成员）
 
 --[[
     Skill类的构造函数
@@ -35,7 +30,6 @@ function Skill:initialize(name, skillEffect,prop)
     self.name = name
     self.skillEffect = skillEffect
     self.subSkill = {}
-    self.subSkill_num = #self.subSkill
     for _, v in pairs(prop) do
         self.prop[_] = v
     end
@@ -55,7 +49,6 @@ function Skill:initialize(other)
     for k, v in ipairs(other.subSkill) do
         self.subSkill[k] = v
     end
-    self.subSkill_num = #self.subSkill
     for _, v in pairs(other.prop) do
         self.prop[_] = v
     end
@@ -70,7 +63,6 @@ function Skill:initialize(name, skillEffect, mpCost, cd,prop)
     self.cd = cd
     self.skillEffect = skillEffect
     self.subSkill = {}
-    self.subSkill_num = #self.subSkill
     for _, v in pairs(prop) do
         self.prop[_] = v
     end
@@ -90,67 +82,23 @@ function Skill:Spell()
         self.subSkill_Use()
     end
 end
---! TODO
 --[[
-    增加相关属性，用于显示和确定技能的攻击范围
-    （需要考虑设计新的数据结构或新的表结构）
-]]
---[[
-    Skill类的子技能调用函数
-    --变量解释：
-        skillTable是存储skill的实例的表，包括当前的主技能及其子技能（但是同一技能的子技能在同一时间只有一个技能
-        储存于表中！！这也是为什么需要使用subSkillNumTable的原因）
-        subSkillNumTable是用于记录调用skillTable中的技能已使用的子技能数量（int型）的表
-        fSkill是一个int型，在数值上可理解为skillTable的长度
-        tSkill是一个int型，功能为检测子技能的嵌套层数是否合法
-    --逻辑解释：
-        一开始将当前的主技能放入skillTable中，正式开始子技能的调用和嵌套
-        当skillTable不为空时，进行循环，当层数合法且当前技能的子技能未全部调用时，将当前技能的未使用的子技能中的第一个放入
-        skillTable，再把这个刚刚放入表中的技能当做当前技能，重复刚才的循环，如果当前技能的子技能全部用完或嵌套层数已满，则
-        去掉skillTable的最后一个技能，把它的父技能当做当前技能重复一开始的循环，直至表为空。
+    Skill类的subSkill_Use函数
+    --功能解释：
+        在本技能的Spell函数被调用且子技能存在时自动调用
+        将当前层数作为键，子技能作为值存入Skill类的skillTable中
+        然后依次对子技能进行调用，使用完子技能后将其从SkillTable中移除
+        （使用了递归的方法）
 ]]
 function Skill:subSkill_Use()
-    skillTable[tSkill] = self
-    subSkillNumTable[tSkill] = 0
-    AddSkillNum()
-    while(fSkill ~= 0) do --当检测技能表不为空时
-        if(tSkill <= self.LAYER and skillTable[fSkill].subSkill_num ~= subSkillNumTable[fSkill]) then --监测技能表中的当前技能的子技能未调用完成时
-            subSkillNumTable[fSkill] = subSkillNumTable[fSkill] + 1 --当前技能使用的子技能数量增加1
-            skillTable[tSkill] = skillTable[fSkill].subSkill[subSkillNumTable[fSkill]] --将当前技能的子技能放入监测技能表中
-            subSkillNumTable[tSkill] = 0 --将当前技能的子技能加入子技能数量监测表
-            skillTable[tSkill].skillEffect() --使用当前技能的子技能
-            AddSkillNum() --当前技能变为原先当前技能的子技能
-        else
-            table.remove(skillTable)--去掉检测技能表的最后一位（当前技能无子技能或已达嵌套层数）
-            table.remove(subSkillNumTable) --相对应去掉子技能数量检测表中的最后一位
-            DelSkillNum()--当前技能变为原先当前技能的父技能
+    if(#self.skillTable<=self.LAYER) then
+        table.insert(self.skillTable,self.subSkill)
+        for i=1,#self.subSkill,1 do
+            self.subSkill[i].Spell()
         end
-    end   
-end
---[[
-    Skill类的设置特殊属性的函数
-    直接修改Skill类中的prop（哈希表）
-    eg：prop['range'] = 5
-    建议propName使用string类型
-]]
-function Skill:SetProp(propName,value)
-    self.prop[propName] = value
-end
---[[
-    Skill类的获得特殊属性的函数
-    直接根据属性名获取prop（哈希表）中对应的值
-]]
-function Skill:GetProp(propName)
-    return self.prop[propName]
+        table.remove(self.skillTable)
+    end
 end
 
-function AddSkillNum()
-    fSkill = fSkill + 1
-    tSkill = tSkill + 1
-end
-function DelSkillNum()
-    fSkill = fSkill - 1
-    tSkill = tSkill - 1
-end
 
 return Skill
