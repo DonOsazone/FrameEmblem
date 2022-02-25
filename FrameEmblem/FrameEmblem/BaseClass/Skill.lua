@@ -78,7 +78,7 @@ end
 ]]
 function Skill:Spell()
     self.skillEffect()
-    if(self.subSkill_num ~= 0) then
+    if(#self.subSkill ~= 0) then
         self.subSkill_Use()
     end
 end
