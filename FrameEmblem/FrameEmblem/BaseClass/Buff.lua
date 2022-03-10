@@ -53,3 +53,5 @@ end
 function Buff:Spell(...)
     (type(self.buffEffect) == 'function' and self.buffEffect or Func(self.buffEffect))(...)
 end
+
+return Buff
